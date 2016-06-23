@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>VueJS</title>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.14/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.6.1/vue-resource.js"></script>
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+  
+  body{
+    background-color:#EEEEEE;
+}
+.list{
+    background-color:#FFF;
+    padding:20px 20px 10px 20px;
+    margin-top:30px;
+}
+.list h1{
+    margin:0;
+    padding-bottom:20px;
+    text-align:center;
+}
+.joke p{
+font-size: 18px;
+}
+.form-control{
+    border-radius:0;
+}
+li.ui-state-default{
+    background:#fff;
+    border:none;
+    border-bottom:1px solid #ddd;
+}
+
+li.ui-state-default:last-child{
+    border-bottom:none;
+}
+
+.footer{
+    background-color:#F4FCE8;
+    margin:0 -20px -10px -20px;
+    padding: 10px 20px;
+}
+#done-items li{
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+    text-decoration:line-through;
+}
+#done-items li:last-child{
+    border-bottom:none;
+}
+#checkAll{
+    margin-top:10px;
+}
+
+.completed{
+text-decoration: line-through;
+}
+</style>
+
+
+  </head>
+  <body id="app">
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list">
+             <h5>Chuck Norris Jokes</h5>
+                  <input type="text" v-model="amount" 
+                  		class="form-control add-todo" 
+                  		placeholder="Amount (E.g.: 10)"                    
+                  		>
+
+                  <button @click.prevent="getJokes" id="checkAll" class="btn btn-success">Get Jokes</button>
+                          <hr>
+
+                  <ul id="sortable" class="list-unstyled">
+                      <li class="ui-state-default">
+							<div class="checkbox">
+							
+							<div v-for="joke in jokes" class="joke"> 
+								
+									<p> <em>{{$index+1}}. </em> {{{joke.joke}}}</p>
+								<hr>
+								
+							</div>
+							</div>							
+							{{joke.joke}}
+                      </li>
+                </ul>
+                <div class="footer">
+                   Build by  <strong>Jacques Uwamungu</strong> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+var jokes = [];
+var oneJoke = {};
+
+var vm = new Vue({
+
+  el: '#app',
+  data:{
+    jokes: jokes,
+	amount: this.amount,
+	oneJoke: oneJoke,
+	failed: '',
+  },
+  methods:{
+  
+	getJokes: function(){
+		if(!this.amount){
+		 this.amount = 5;
+		}
+	
+		this.$http.get('http://api.icndb.com/jokes/random/'+this.amount).then(function (response) {
+		
+		if(response.data.type=='success'){
+
+			return 	this.$set('jokes', response.data.value);
+		}	   	
+      }, function (response) {
+			
+		  // return this.error = 'Oops soemthing went wrong, try again';
+      });
+	},
+	
+  },
+  ready: function() {
+	 this.getJokes;
+	}
+
+
+});
+
+</script>
+  </body>
+</html>
